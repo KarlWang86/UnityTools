@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 /// <summary>
+/// add this component to parent gameobject,
 /// combine same material child to parent and don't show child
 /// child must be static
-/// every parent 
+/// after combine every parent.mesh.vertexCount must less than 65535
 /// </summary>
 public class CombineMeshGameObject : MonoBehaviour
 {
@@ -15,23 +16,22 @@ public class CombineMeshGameObject : MonoBehaviour
     
     [ContextMenu("Combine Now")]
     public void Combine() {
+        Material matCombined=null;
         CombineInstance[] combine = new CombineInstance[transform.childCount];
         int i = 0;
         
         while (i < transform.childCount) {
             combine[i].mesh = transform.GetChild(i).GetComponent<MeshFilter>().sharedMesh;
             combine[i].transform = transform.GetChild(i).localToWorldMatrix;
+            if (matCombined == null) {
+                matCombined = transform.GetChild(i).GetComponent<MeshRenderer>().material;
+            }
             i++;
         }
         Mesh mesh = new Mesh();
         mesh.CombineMeshes(combine);
-        //mesh.vertexCount must less than 65535
         transform.GetComponent<MeshFilter>().sharedMesh = mesh;
-        //todo change name to your gameobject name
-        if (gameObject.name.Contains("some name")) {
-            //todo change some mat to your materials
-            //transform.GetComponent<MeshRenderer>().material = some material;
-        }
+        transform.GetComponent<MeshRenderer>().material = matCombined;
 
         i = 0;
         while (i < transform.childCount) {
