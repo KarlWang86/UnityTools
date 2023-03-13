@@ -10,3 +10,5 @@ CombineMeshGameObject: combine mesh component
 JsonHelper: json array convert
    
 CoroutineUtils: Coroutine chain
+
+EventManager: Simple C# EventManager
